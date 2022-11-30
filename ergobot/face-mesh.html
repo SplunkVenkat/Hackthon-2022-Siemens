@@ -21,14 +21,41 @@
     const canvasCtx = canvasElement.getContext('2d');
     
     function onResults(results) {
-        console.log(results);
+      console.log(results);
+      var irisLeftMinX = -1;
+      var irisLeftMaxX = -1;
+      var width = results.image.width;
+      var height = results.image.height;
+      var frame_counter =0	
+      var CEF_COUNTER =0	
+      var TOTAL_BLINKS =0	
+      var CLOSED_EYES_FRAME =1
       canvasCtx.save();
       canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
       canvasCtx.drawImage(
           results.image, 0, 0, canvasElement.width, canvasElement.height);
       if (results.multiFaceLandmarks) {
         for (const landmarks of results.multiFaceLandmarks) {
-          drawConnectors(canvasCtx, landmarks, FACEMESH_TESSELATION,
+          for (const point of FACEMESH_LEFT_IRIS) {
+            var point0 = landmarks[point[0]];
+            console.log(point0);
+              if (irisLeftMinX == -1 || point0.x * width < irisLeftMinX) {
+                irisLeftMinX = point0.x * width;
+              }
+              if (irisLeftMaxX == -1 || point0.x * width > irisLeftMaxX) {
+                  irisLeftMaxX = point0.x * width;
+              }
+          }
+          /*for (const point of FACEMESH_RIGHT_EYE) {
+            var point0 = landmarks[point[0]];
+            if (irisLeftMinX == -1 || point0.x * width < irisLeftMinX) {
+                irisLeftMinX = point0.x * width;
+              }
+              if (irisLeftMaxX == -1 || point0.x * width > irisLeftMaxX) {
+                  irisLeftMaxX = point0.x * width;
+              }
+          }*/
+          /*drawConnectors(canvasCtx, landmarks, FACEMESH_TESSELATION,
                          {color: '#C0C0C070', lineWidth: 1});
           drawConnectors(canvasCtx, landmarks, FACEMESH_RIGHT_EYE, {color: '#FF3030'});
           drawConnectors(canvasCtx, landmarks, FACEMESH_RIGHT_EYEBROW, {color: '#FF3030'});
@@ -37,9 +64,40 @@
           drawConnectors(canvasCtx, landmarks, FACEMESH_LEFT_EYEBROW, {color: '#30FF30'});
           drawConnectors(canvasCtx, landmarks, FACEMESH_LEFT_IRIS, {color: '#30FF30'});
           drawConnectors(canvasCtx, landmarks, FACEMESH_FACE_OVAL, {color: '#E0E0E0'});
-          drawConnectors(canvasCtx, landmarks, FACEMESH_LIPS, {color: '#E0E0E0'});
+          drawConnectors(canvasCtx, landmarks, FACEMESH_LIPS, {color: '#E0E0E0'});*/
+          drawConnectors(canvasCtx, landmarks, FACEMESH_RIGHT_EYE, {color: '#FF3030'});
+          drawConnectors(canvasCtx, landmarks, FACEMESH_LEFT_IRIS, {color: '#30FF30'});
+          var ratio = blinkRatio(canvasCtx, landmarks, FACEMESH_RIGHT_EYE, FACEMESH_LEFT_EYE);	
+          console.log(ratio);	
+          if (ratio >0.4) {	
+                CEF_COUNTER +=1	
+          }	
+            else {	
+                if (CEF_COUNTER>CLOSED_EYES_FRAME) {	
+                    TOTAL_BLINKS +=1	
+                    CEF_COUNTER =0	
+                }	
+            }	
+            console.log(TOTAL_BLINKS);	
+            canvasCtx.fillStyle = "green";	
+      canvasCtx.font = "30px Arial";	
+      canvasCtx.fillText("Blinking Count : "+TOTAL_BLINKS , width * 0.15, 50);	
+      // canvasCtx.restore();
         }
       }
+      var dx = irisLeftMaxX - irisLeftMinX;
+      var dX = 11.7;
+
+      // Logitech HD Pro C922	Norm focal
+      var normalizedFocaleX = 1.40625;
+      var fx = Math.min(width, height) * normalizedFocaleX;
+      var dZ = (fx * (dX / dx)) / 10.0;
+      dZ = dZ.toFixed(2);
+      //console.log(dZ + " cm");
+
+      canvasCtx.fillStyle = "red";
+      canvasCtx.font = "30px Arial";
+      canvasCtx.fillText(dZ + " cm", width * 0.75, 50);
       canvasCtx.restore();
     }
     
@@ -50,7 +108,9 @@
       maxNumFaces: 1,
       refineLandmarks: true,
       minDetectionConfidence: 0.5,
-      minTrackingConfidence: 0.5
+      minTrackingConfidence: 0.5,
+      selfieMode: true,
+      enableFaceGeometry: false,
     });
     faceMesh.onResults(onResults);
     
@@ -62,41 +122,55 @@
       height: 720
     });
     camera.start();
+    var mediaDevices = navigator.mediaDevices;
+    console.log(mediaDevices);
+    function landmarksDetection(img, results) {	
+    var img_width = results.image.width;	
+    var img_height = results.image.height;	
+    var coord = [];	
+    for (const landmarks of results.multiFaceLandmarks) {	
+          console.log(landmarks);	
+          var coordX = parseInt(landmarks[0].x * img_width);	
+          var coordY = parseInt(landmarks[0].y * img_height);	
+          //var finalCoords = '('+coordX+','+coordY+')'	
+          coord.push(finalCoords)	
+    }	
+      console.log(coord);	
+      return coord;	
+    }	
+    function euclaideanDistance(point, point1) {	
+      var x = point.x;	
+      var y = point.y;	
+      var x1 = point1.x;	
+      var y1 = point1.y;	
+      var distance = Math.sqrt((x1 - x)**2 + (y1 - y)**2)	
+    return distance	
+    }	
+    function blinkRatio(img, landmarks, right_indices, left_indices){	
+      // Right eyes 	
+      // horizontal line 	
+      var rh_right = landmarks[right_indices[0][1]];	
+      var rh_left = landmarks[right_indices[8][1]];	
+      var rv_top = landmarks[right_indices[12][1]];	
+      var rv_bottom = landmarks[right_indices[4][1]];	
+      // LEFT_EYE 	
+      // horizontal line 	
+      var lh_right = landmarks[left_indices[0][1]]	
+      var lh_left = landmarks[left_indices[8][1]]	
+      // vertical line 	
+      var lv_top = landmarks[left_indices[12][1]]	
+      var lv_bottom = landmarks[left_indices[4][1]]	
+      var rhDistance = euclaideanDistance(rh_right, rh_left);	
+      var rvDistance = euclaideanDistance(rv_top, rv_bottom)	
+      var lvDistance = euclaideanDistance(lv_top, lv_bottom)	
+      var lhDistance = euclaideanDistance(lh_right, lh_left)	
+      var reRatio = rhDistance/rvDistance	
+      var leRatio = lhDistance/lvDistance	
+      var ratio = (reRatio+leRatio)/2	
+      return ratio 	
+    }
     </script>
     <style>
-        @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-.abs {
-  position: absolute;
-}
-
-a {
-  color: white;
-  text-decoration: none;
-  &:hover {
-    color: lightblue;
-  }
-}
-
-body {
-  bottom: 0;
-  font-family: 'Titillium Web', sans-serif;
-  color: white;
-  left: 0;
-  margin: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  transform-origin: 0px 0px;
-  overflow: hidden;
-}
 
 .container {
   position: absolute;
@@ -136,70 +210,4 @@ body {
   left: 0;
   top: 0;
 }
-
-.logo {
-  bottom: 10px;
-  right: 20px;
-
-  .title {
-    color: white;
-    font-size: 28px;
-  }
-
-  .subtitle {
-    position: relative;
-    color: white;
-    font-size: 10px;
-    left: -30px;
-    top: 20px;
-  }
-}
-
-.control-panel {
-  position: absolute;
-  left: 10px;
-  top: 10px;
-}
-
-.loading {
-  display: flex;
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  align-items: center;
-  backface-visibility: hidden;
-  justify-content: center;
-  opacity: 1;
-  transition: opacity 1s;
-
-  .message {
-    font-size: x-large;
-  }
-
-  .spinner {
-    position: absolute;
-    width: 120px;
-    height: 120px;
-    animation: spin 1s linear infinite;
-    border: 32px solid #bebebe;
-    border-top: 32px solid #3498db;
-    border-radius: 50%;
-  }
-}
-
-.loaded .loading {
-  opacity: 0;
-}
-
-.shoutout {
-  left: 0;
-  right: 0;
-  bottom: 40px;
-  text-align: center;
-  font-size: 24px;
-  position: absolute;
-}
-
-    </style>
+</style>
