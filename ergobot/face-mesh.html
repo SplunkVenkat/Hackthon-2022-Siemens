@@ -26,20 +26,34 @@
     var CLOSED_EYES_FRAME =1;
     var countDownDate = new Date().getTime();
     var BLINKFLAG = false;
+    var blinkingInterval;
+    var sittingInterval;
+    var sittngFlag = false;
+    var sittingFlagCounter = false;
+    var sittingTimerCount = 0;
     function onResults(results) {
       // console.log(results);
       var irisLeftMinX = -1;
       var irisLeftMaxX = -1;
       var width = results.image.width;
       var height = results.image.height;
-
       canvasCtx.save();
       canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
       canvasCtx.drawImage(
           results.image, 0, 0, canvasElement.width, canvasElement.height);
+      if(results.multiFaceLandmarks.length >= 1) {
+        sittngFlag = true;
+        sittingIntervalCalculation();
+      } else {
+        sittngFlag = false;
+        sittingTimerCount = 0;
+      }
       if (results.multiFaceLandmarks) {
+        // console.log(results.multiFaceLandmarks);
         for (const landmarks of results.multiFaceLandmarks) {
+          
           for (const point of FACEMESH_LEFT_IRIS) {
+            // console.log(point);
             var point0 = landmarks[point[0]];
             //console.log(point0);
               if (irisLeftMinX == -1 || point0.x * width < irisLeftMinX) {
@@ -121,31 +135,47 @@
     function getMinutesDifference(totalBlinks, date = new Date()) {
         // Update the count down every 1 second
         countDownDate = new Date().getTime();
-        var x = setInterval(function() {
+        blinkingInterval = setInterval(function() {
         
         // Get today's date and time
         var now = new Date().getTime();
-          console.log(countDownDate);
-          console.log(now);
+          // console.log(countDownDate);
+          // console.log(now);
         // Find the distance between now and the count down date
         var distance = now - countDownDate ;
-        console.log(distance);
+        // console.log(distance);
         // Time calculations for days, hours, minutes and seconds
         var days = Math.floor(distance / (1000 * 60 * 60 * 24));
         var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-          console.log(seconds);
-          console.log(minutes);
+          // console.log(seconds);
+          // console.log(minutes);
           if(seconds >= 10) {
             console.log("Blinks");
           }
         // If the count down is over, write some text 
         if (distance < 0) {
-          clearInterval(x);
+          clearInterval(blinkingInterval);
           
         }
         }, 1000);
+    }
+    function sittingIntervalCalculation() {
+      if(!sittingFlagCounter) {
+        sittingFlagCounter = true;
+      console.log(sittingInterval);
+      sittingInterval = setInterval(function() {
+        sittingTimerCount += 1;
+        if((sittingTimerCount/60) >= 1) {
+          console.log('Sitting long time');
+          clearInterval(sittingInterval);
+          sittingFlagCounter = false;
+          sittingTimerCount = 0;
+        }
+        console.log("sittingTimerCount"+sittingTimerCount);
+        }, 1000);
+      }
     }
     const faceMesh = new FaceMesh({locateFile: (file) => {
       return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
