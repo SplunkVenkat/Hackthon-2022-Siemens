@@ -14,6 +14,7 @@
   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css"> 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
@@ -25,6 +26,8 @@
   <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
   <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/izimodal/1.6.1/css/iziModal.min.css"> 
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
@@ -79,7 +82,7 @@
 
     </div>
   </header><!-- End Header -->
-
+  <div id="modal">
   <!-- ======= Hero Section ======= -->
   <section id="hero" class="d-flex align-items-center">
 
@@ -150,7 +153,7 @@
           <h2>Ergo Bot Analysis</h2>
         </div>
 
-        <div class="row content">
+        <div class="row content" id="analysisWindow1">
           <div class="col-lg-6">
             <p>
               ErgoBot guides you step-by-step through the process to adjust the position of your desk and computer to help eliminate back, arm, shoulder and hand pain at work. </p> <p>This personalized, self-guided program promotes fitness, health, posture, work breaks, and movement at your desk. Increase your energy and productivity at work, decrease your pain and discomfort! </p><p>It provides product suggestions with the option to purchase products. ErgoBot leads you through the proper adjustments to avoid work pain.
@@ -162,11 +165,53 @@
               <li><i class="ri-check-double-line"></i><a href="Holistic.html" target="_blank">Holistic</a></li>
               <li><i class="ri-check-double-line"></i><a href="Pose.html" target="_blank">Pose</a></li>
             </ul>
-            <a href="#" class="btn-learn-more">Click here to Start Analysis <i class="bx bx-analyse"></i></a>
+            <button href="#" class="btn-learn-more" onclick="startAnalyseFunction()">Click here to Start Analysis <i class="bx bx-analyse"></i></button>
           </div>
           <div class="col-lg-6 pt-4 pt-lg-0">
             <img src="assets/img/ergo/character-houding_dribbble.gif" class="img-fluid" alt="">
           </div>
+        </div>
+         
+        <div class="stepProgress" id="analysisWindow2">
+          <div class="container">  
+            <h2> Begin Ergo Bot Analysis </h2>   
+                <form id="form">  
+                <ul id="progressbar">  
+                <li class="active" id="step1">  
+                <strong> Sitting Posture </strong>  
+                </li>  
+                <li id="step2"> <strong> Distance between Monitor and eyes </strong> </li>  
+                <li id="step4"> <strong> Finished </strong> </li>  
+                    </ul>  
+            <div class="progress">  
+            <div class="pbar"> </div>  
+                </div> <br>  
+                <fieldset>  
+                <h3> Started Analyzing your Posture.. <!--<div class="loadersmall"></div>--></h3>
+                <p id="posData"></p>
+                <div style="float: left;"><ul><li>Dynamic Data</li><li>Dynamic Data</li></ul></div>
+                <input type="button" value="Reanalyze" onclick="analysePosture()"/> 
+<input type="button" name="next-step" class="next-step" value="Next Step" />  
+            </fieldset>  
+            <fieldset>  
+    <h2> Checking monitor distance... </h2>  
+<input type="button" name="next-step" class="next-step" value="Next Step" />  
+<input type="button" name="pre-step" class="pre-step"  
+value="Pre Step" />  
+        </fieldset>  
+        
+    <fieldset>  
+    <div class="finish">  
+    <h2 class="text text-center">  
+    <strong onclick="closeAnalyseFunction()"> FINISHED </strong>  
+        </h2>  
+    </div>  
+<input type="button" name="pre-step"  
+                class="pre-step"  
+                value="Pre Step" />  
+                </fieldset>  
+                </form>  
+            </div>  
         </div>
 
       </div>
@@ -181,7 +226,7 @@
               <video class="input_video"></video>
               <canvas class="output_canvas" width="1280px" height="720px"></canvas>
             </div>
-          </div> 
+          </div>
 
           <!-- <div class="col-lg-7 d-flex flex-column justify-content-center align-items-stretch  order-2 order-lg-1">
 
@@ -964,6 +1009,11 @@
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+  <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js'> </script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/izimodal/1.6.1/js/iziModal.min.js'> </script>  
+  <script src=  
+'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'>  
+  </script>
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
@@ -1023,6 +1073,7 @@ function showNotification(customMessage){
         iconColor: 'rgb(0, 255, 184)'
     });
 }
+
 const lineChartCtx = document.getElementById('lineChart');
 const lineChartData = {
   //labels: ['Low','Medium','High'],
@@ -1117,18 +1168,16 @@ const pieChartConfig = {
 new Chart(pieChartCtx, pieChartConfig );
 
 $( document ).ready(function() {
-$.ajax({url: "posture.json", success: function(result){
-    var jsonResult = JSON.parse(result).data;
-    for(var i = 0; i < jsonResult.length;i++) {
-      lineChartDaraArray.push(jsonResult[0].monday);
-      lineChartDaraArray.push(jsonResult[0].tuesday);
-      lineChartDaraArray.push(jsonResult[0].wednesday);
-      lineChartDaraArray.push(jsonResult[0].thursday);
-      lineChartDaraArray.push(jsonResult[0].friday);
-    }
-    console.log(lineChartDaraArray);
-    new Chart(lineChartCtx, lineChartConfig );
-  }});
+
+  $.ajax({
+            type: 'GET',
+            url: "http://192.168.83.65:5000/users/pose/day?email=rajprabhakar@gmail.com&date=2022-12-01",
+            contentType: "application/json",
+            crossDomain: true,
+            success:function(data){
+             console.log(data);
+            }
+        });
 });
 </script>
 <script type="module">
@@ -1150,7 +1199,9 @@ $.ajax({url: "posture.json", success: function(result){
     var blinkTimerMin = 5000; // 5sec = 5000, 
     var SittingTimerMin = 1; // 1min = 1, 
     var DistanceTimerMin = 150; // 15sec = 150,
+    var PostureTimerMin = 5000 // 5sec = 5000,
     let myInterval = setInterval(displayBlinkNotification, blinkTimerMin);
+    setInterval(analysePosture('Notification'), PostureTimerMin);
     function displayBlinkNotification(){
       if(TOTAL_BLINKS >= 1) {
         console.log('Alertt Blink');
@@ -1231,8 +1282,8 @@ $.ajax({url: "posture.json", success: function(result){
       
       canvasCtx.fillStyle = "green";	
       canvasCtx.font = "30px Arial";	
-      canvasCtx.fillText("Blinking Count : "+TOTAL_BLINKS , width * 0.15, 50);	
-      document.getElementById('blinking_text_dipslay').innerHTML = TOTAL_BLINKS;
+      canvasCtx.fillText("Blinking Count : "+TOTAL_BLINKS , width * 0.15, 50);
+      document.getElementById('blinking_text_dipslay').innerHTML = TOTAL_BLINKS;	
       // canvasCtx.restore();
         }
       }
@@ -1283,7 +1334,7 @@ $.ajax({url: "posture.json", success: function(result){
         var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        // console.log(seconds);
+          // console.log(seconds);
           // console.log(minutes);
           if(seconds >= 10) {
             // console.log("Blink ur Eyes");
@@ -1383,9 +1434,107 @@ $.ajax({url: "posture.json", success: function(result){
       return ratio 	
     }
   </script>
+<script> 
+  let postureResult = '';
+  $(document).ready(function () {  
+    analyseInit();
+  }); 
+  function startAnalyseFunction() {
+    $('#analysisWindow2').show();
+    analyseInit();
+    setTimeout(analysePosture, 1000)
+    $('#analysisWindow1').hide(); 
+  }
+  function closeAnalyseFunction() {
+    $('#analysisWindow2').hide();
+    $('#analysisWindow1').show(); 
+  }
+  function analyseInit(){
+    var currentGfgStep, nextGfgStep, preGfgStep;  
+      var opacity;  
+      var current = 1;  
+      var steps = $("fieldset").length;  
+      setProgressBar(current);  
+      $(".next-step").click(function () {  
+          currentGfgStep = $(this).parent();  
+          nextGfgStep = $(this).parent().next();  
+          $("#progressbar li").eq($("fieldset")  
+              .index(nextGfgStep)).addClass("active");  
+          nextGfgStep.show();  
+          currentGfgStep.animate({ opacity: 0 }, {  
+              step: function (now) {  
+                  opacity = 1 - now;  
+                  currentGfgStep.css({  
+                      'display': 'none',  
+                      'position': 'relative'  
+                  });  
+                  nextGfgStep.css({ 'opacity': opacity });  
+              },  
+              duration: 500  
+          });  
+          setProgressBar(++current);  
+      });  
+      $(".pre-step").click(function () {  
+          currentGfgStep = $(this).parent();  
+          preGfgStep = $(this).parent().prev();  
+          $("#progressbar li").eq($("fieldset")  
+          .index(currentGfgStep)).removeClass("active");  
+          preGfgStep.show();  
+          currentGfgStep.animate({ opacity: 0 }, {  
+              step: function (now) {  
+                  opacity = 1 - now;  
+                  currentGfgStep.css({  
+                      'display': 'none',  
+                      'position': 'relative'  
+                  });  
+                  preGfgStep.css({ 'opacity': opacity });  
+              },  
+              duration: 500  
+          });  
+          setProgressBar(--current);  
+      });  
+      function setProgressBar(currentStep) {  
+          var percent = parseFloat(100 / steps) * current;  
+          percentpercent = percent.toFixed();  
+          $(".pbar")  
+              .css("width", percent + "%")  
+      }  
+      $(".submit").click(function () {  
+          return false;  
+      }) 
+  }
+  function analysePosture(param){
+    $("#posData").text('');
+    $.ajax({
+            type: 'GET',
+            url: "http://192.168.4.65:5000/users/now?email=rajprabhakar@gmail.com",
+            contentType: "application/json",
+            crossDomain: true,
+            success:function(data){
+             console.log(data.now);
+             
+             if(data.now.pose == 'good'){
+              postureResult = data.now.pose;
+             } else if(data.now.remedy == 'wait') {
+              analysePosture();
+              postureResult = '';
+             }
+             else {
+              postureResult = data.now.remedy;
+             }
+             $("#posData").text(postureResult);
+             if(param && param == 'Notification') {
+                showChromeNotification(postureResult);
+                showNotification(postureResult);
+             }
+            
+            }
+        });
+  }
+  </script> 
 <style>
     .initial-container .card, .second-container .card {
-        margin: 5px 0px;
+      margin: 5px 0px;
     }
     .progress {
         margin: 10px;
@@ -1437,6 +1586,163 @@ $.ajax({url: "posture.json", success: function(result){
       left: 0;
       top: 0;
     }
+
+
+    .stepProgress #form {  
+    text-align: center;  
+    position: relative;  
+    margin-top: 20px  
+    }  
+    .stepProgress #form fieldset {  
+        border: 0 none;  
+        border-radius: 0.5rem;  
+        box-sizing: border-box;  
+        width: 100%;  
+        margin: 0;  
+        padding-bottom: 20px;  
+        position: relative  
+    }  
+    .stepProgress .finish {  
+        text-align: center  
+    }  
+    .stepProgress #form fieldset:not(:first-of-type) {  
+        display: none  
+    }  
+    .stepProgress #form .pre-step {  
+        width: 100px;  
+        font-weight: bold;  
+        color: white;  
+        border: 0 none;  
+        border-radius: 0px;  
+        cursor: pointer;  
+        padding: 10px 5px;  
+        margin: 10px 5px 10px 0px;  
+        float: right  
+    }  
+    .next-step {  
+        width: 100px;  
+        font-weight: bold;  
+        color: white;  
+        border: 0 none;  
+        border-radius: 0px;  
+        cursor: pointer;  
+        padding: 10px 5px;  
+        margin: 10px 5px 10px 0px;  
+        float: right  
+    }  
+    .stepProgress .form, .pre-step {  
+        background: #616161;  
+    }  
+    .stepProgress .form, .next-step {  
+        background: red;  
+    }  
+    .stepProgress #form .pre-step:hover  
+    {  
+        background-color: #000000  
+    }  
+    .stepProgress #form .pre-step:focus {  
+        background-color: #000000  
+    }  
+    .stepProgress #form .next-step:hover  
+    {  
+        background-color: #2F8D46  
+    }  
+    .stepProgress #form .next-step:focus {  
+        background-color: #2F8D46  
+    }  
+    .stepProgress .text {  
+        color: red;  
+        font-weight: normal  
+    }  
+    .stepProgress #progressbar {  
+        margin-bottom: 30px;  
+        overflow: hidden;  
+        color: lightgrey;
+        margin-left: 20%;
+    }  
+    .stepProgress #progressbar .active {  
+        color: #2F8D46  
+    }  
+    .stepProgress #progressbar li {  
+        list-style-type: none;  
+        font-size: 15px;  
+        width: 25%;  
+        float: left;  
+        position: relative;  
+        font-weight: 400  
+    }  
+    .stepProgress #progressbar #step1:before {  
+        content: "1"  
+    }  
+    .stepProgress #progressbar #step2:before {  
+        content: "2"  
+    }  
+    .stepProgress #progressbar #step3:before {  
+        content: "3"  
+    }  
+    .stepProgress #progressbar #step4:before {  
+        content: "3"  
+    }  
+    .stepProgress #progressbar li:before {  
+        width: 50px;  
+        height: 50px;  
+        line-height: 45px;  
+        display: block;  
+        font-size: 20px;  
+        color: #ffffff;  
+        background: lightgray;  
+        border-radius: 50%;  
+        margin: 0 auto 10px auto;  
+        padding: 2px  
+    }  
+    .stepProgress #progressbar li:after {  
+        content: '';  
+        width: 100%;  
+        height: 2px;  
+        background: lightgray;  
+        position: absolute;  
+        left: 0;  
+        top: 25px;  
+        z-index: -1  
+    }  
+    .stepProgress #progressbar li.active:before  
+    {  
+        background: #2F8D46  
+    }  
+    .stepProgress #progressbar li.active:after {  
+        background: #2F8D46  
+    }  
+    .stepProgress #progressbar li.active:after {  
+        background: #2F8D46  
+    }  
+    .stepProgress h2 {  
+    text-transform: uppercase;  
+      font-weight: normal;  
+    text-align: center;  
+    margin: 10;  
+      padding: 10  
+    color: red;  
+    }  
+    .stepProgress .progress {  
+        height: 20px  
+    }  
+    .stepProgress .pbar {  
+        background-color: #2F8D46  
+    } 
+    
+    #analysisWindow2{
+      display: none;
+    }
+    .loadersmall {
+      border: 5px solid #f3f3f3;
+    -webkit-animation: spin 1s linear infinite;
+    animation: spin 1s linear infinite;
+    border-top: 5px solid #555;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+  }
+    
 </style>
 
 </body>
