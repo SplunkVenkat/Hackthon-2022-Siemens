@@ -56,8 +56,8 @@
           <li><a class="nav-link scrollto" href="#about">Ergo Bot Analysis</a></li>
           <li><a class="nav-link   scrollto" href="#portfolio">Ergonomic Streches</a></li>
           <li><a class="nav-link scrollto" href="#team">Reports</a></li>
-          <li><a class="nav-link scrollto" href="#services">Services</a></li>
-          <li class="dropdown"><a href="#"><span>Drop Down</span> <i class="bi bi-chevron-down"></i></a>
+          <li><a class="nav-link scrollto" href="#services">Recommended</a></li>
+          <!-- <li class="dropdown"><a href="#"><span>Drop Down</span> <i class="bi bi-chevron-down"></i></a>
             <ul>
               <li><a href="#">Drop Down 1</a></li>
               <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>
@@ -74,7 +74,7 @@
               <li><a href="#">Drop Down 4</a></li>
             </ul>
           </li>
-          <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
+          <li><a class="nav-link scrollto" href="#contact">Contact</a></li>  -->
           <li><a class="getstarted scrollto" href="#about">Get Started</a></li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
@@ -111,7 +111,7 @@
   <main id="main">
 
     <!-- ======= Clients Section ======= -->
-    <section id="clients" class="clients section-bg">
+    <!-- <section id="clients" class="clients section-bg">
       <div class="container">
 
         <div class="row" data-aos="zoom-in">
@@ -143,7 +143,7 @@
         </div>
 
       </div>
-    </section><!-- End Cliens Section -->
+    </section>--><!-- End Cliens Section --> 
 
     <!-- ======= About Us Section ======= -->
     <section id="about" class="about">
@@ -158,13 +158,13 @@
             <p>
               ErgoBot guides you step-by-step through the process to adjust the position of your desk and computer to help eliminate back, arm, shoulder and hand pain at work. </p> <p>This personalized, self-guided program promotes fitness, health, posture, work breaks, and movement at your desk. Increase your energy and productivity at work, decrease your pain and discomfort! </p><p>It provides product suggestions with the option to purchase products. ErgoBot leads you through the proper adjustments to avoid work pain.
             </p>
-            <ul>
+           <!--<ul>
               <li><i class="ri-check-double-line"></i> Distance between Monitor and eyes</li>
               <li><i class="ri-check-double-line"></i> Improving Sitting Posture</li>
               <li><i class="ri-check-double-line"></i><a href="face-mesh.html" target="_blank">Face-mesh</a></li>
               <li><i class="ri-check-double-line"></i><a href="Holistic.html" target="_blank">Holistic</a></li>
               <li><i class="ri-check-double-line"></i><a href="Pose.html" target="_blank">Pose</a></li>
-            </ul>
+            </ul>--> 
             <button href="#" class="btn-learn-more" onclick="startAnalyseFunction()">Click here to Start Analysis <i class="bx bx-analyse"></i></button>
           </div>
           <div class="col-lg-6 pt-4 pt-lg-0">
@@ -187,14 +187,15 @@
             <div class="pbar"> </div>  
                 </div> <br>  
                 <fieldset>  
-                <h3> Started Analyzing your Posture.. <!--<div class="loadersmall"></div>--></h3>
+                <h3 id="started" style="display:inline-block"> <div class="loader"></div> &nbsp; Started Analyzing your Posture.. </h3>
                 <p id="posData"></p>
-                <div style="float: left;"><ul><li>Dynamic Data</li><li>Dynamic Data</li></ul></div>
-                <input type="button" value="Reanalyze" onclick="analysePosture()"/> 
+                <input type="button" value="Reanalyze" id="Reanalyze" onclick="analysePosture('Reanalyze')"/> 
 <input type="button" name="next-step" class="next-step" value="Next Step" />  
             </fieldset>  
             <fieldset>  
-    <h2> Checking monitor distance... </h2>  
+              <h3 id="started" style="display:inline-block"> <div class="loader"></div> &nbsp; Calculating distance between eyes and monitor.. </h3>
+              <p id="distance_result"></p>
+              
 <input type="button" name="next-step" class="next-step" value="Next Step" />  
 <input type="button" name="pre-step" class="pre-step"  
 value="Pre Step" />  
@@ -203,12 +204,19 @@ value="Pre Step" />
     <fieldset>  
     <div class="finish">  
     <h2 class="text text-center">  
-    <strong onclick="closeAnalyseFunction()"> FINISHED </strong>  
+    <strong style="color:#37517e"> Completed the Basic posture criteria's </strong> 
+    
         </h2>  
+        <p style="color:#37517e"> Also Ergobot will help you during working hours by tracking the following metrics at some interval which was recommeneded by ergonomist to your improve health</p>
+    <ul style="float:left">
+      <li>Blinking your eyes at Frequent interval</li>
+      <li> &nbsp;  &nbsp; Notify you while you working for too long</li>
+    </ul>
     </div>  
-<input type="button" name="pre-step"  
+<input type="button" onclick="closeAnalyseFunction()"  name="pre-step"  
                 class="pre-step"  
-                value="Pre Step" />  
+                value="Done" />  
+
                 </fieldset>  
                 </form>  
             </div>  
@@ -278,7 +286,7 @@ value="Pre Step" />
     </section><!-- End Why Us Section -->
 
     <!-- ======= Skills Section ======= -->
-    <section id="skills" class="skills">
+   <!-- <section id="skills" class="skills">
       <div class="container" data-aos="fade-up">
 
         <div class="row">
@@ -328,47 +336,47 @@ value="Pre Step" />
         </div>
 
       </div>
-    </section><!-- End Skills Section -->
+    </section> --><!-- End Skills Section -->
 
     <!-- ======= Services Section ======= -->
     <section id="services" class="services section-bg">
       <div class="container" data-aos="fade-up">
 
         <div class="section-title">
-          <h2>Services</h2>
-          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+          <h2>Recommended exercises</h2>
+          <!-- <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p> -->
         </div>
 
         <div class="row">
           <div class="col-xl-3 col-md-6 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100">
             <div class="icon-box">
-              <div class="icon"><i class="bx bxl-dribbble"></i></div>
-              <h4><a href="">Lorem Ipsum</a></h4>
-              <p>Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi</p>
+              <!-- <div class="icon"><i class="bx bxl-dribbble"></i></div> -->
+              <h4>Neck</h4>
+              <a href="https://www.youtube.com/watch?v=J4o7Hb9gS4o" class="glightbox btn-watch-video"><i class="bi bi-play-circle"></i><span>Watch Video</span></a>
             </div>
           </div>
 
           <div class="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-md-0" data-aos="zoom-in" data-aos-delay="200">
             <div class="icon-box">
-              <div class="icon"><i class="bx bx-file"></i></div>
-              <h4><a href="">Sed ut perspici</a></h4>
-              <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore</p>
-            </div>
-          </div>
-
-          <div class="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-xl-0" data-aos="zoom-in" data-aos-delay="300">
-            <div class="icon-box">
-              <div class="icon"><i class="bx bx-tachometer"></i></div>
-              <h4><a href="">Magni Dolores</a></h4>
-              <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia</p>
+             
+              <h4>Spine</h4>
+              <a href="https://www.youtube.com/watch?v=ZJkEktC0Q8g" class="glightbox btn-watch-video"><i class="bi bi-play-circle"></i><span>Watch Video</span></a>
             </div>
           </div>
 
           <div class="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-xl-0" data-aos="zoom-in" data-aos-delay="400">
             <div class="icon-box">
-              <div class="icon"><i class="bx bx-layer"></i></div>
-              <h4><a href="">Nemo Enim</a></h4>
-              <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
+              
+              <h4>Stretch</h4>
+              <a href="https://www.youtube.com/watch?v=nFIfv-jIgbI" class="glightbox btn-watch-video"><i class="bi bi-play-circle"></i><span>Watch Video</span></a>
+            </div>
+          </div>
+
+          <div class="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-xl-0" data-aos="zoom-in" data-aos-delay="300">
+            <div class="icon-box">
+            
+              <h4>Sitting Posture</h4>
+              <a href="https://www.youtube.com/watch?v=nnpHLxlj3fQ" class="glightbox btn-watch-video"><i class="bi bi-play-circle"></i><span>Watch Video</span></a>
             </div>
           </div>
 
@@ -378,7 +386,7 @@ value="Pre Step" />
     </section><!-- End Services Section -->
 
     <!-- ======= Cta Section ======= -->
-    <section id="cta" class="cta">
+    <!-- <section id="cta" class="cta">
       <div class="container" data-aos="zoom-in">
 
         <div class="row">
@@ -392,7 +400,7 @@ value="Pre Step" />
         </div>
 
       </div>
-    </section><!-- End Cta Section -->
+    </section> --> <!-- End Cta Section -->
 
     <!-- ======= Portfolio Section ======= -->
     <section id="portfolio" class="portfolio">
@@ -686,8 +694,8 @@ value="Pre Step" />
           </div>
           <div class="col-3" style="height: 200px;padding: 0px;">  
             <div class="card border-succes rounded-0">
-              <div class="card-header bg-success rounded-0">
-                <h5 class="card-title text-white mb-1">Eye Health</h5>
+              <div class="card-header rounded-0" style="color:#37517e">
+                <h5 class="card-title  mb-1">Eye Health</h5>
               </div>
               <div class="card-body">
                 <h1 class="display-4 font-weight-bold text-success text-center" id="blinking_text_dipslay">0</h1>
@@ -695,8 +703,8 @@ value="Pre Step" />
             </div>
             <div class="card border-succes rounded-0" style="height: 200px;top: 10%;flex: 0 0 auto;padding: -5px;">
              <!-- <div class="card border-success rounded-0">-->
-                <div class="card-header bg-success rounded-0">
-                  <h5 class="card-title text-white mb-1">Distance</h5>
+                <div class="card-header rounded-0" style="color:#37517e">
+                  <h5 class="card-title mb-1">Eye Distance from Monitor</h5>
                 </div>
                 <div class="card-body">
                   <h1 class="display-4 font-weight-bold text-success text-center" id="distance_text_dipslay"></h1>
@@ -715,7 +723,7 @@ value="Pre Step" />
     </section>
 
     <!-- ======= Pricing Section ======= -->
-    <section id="pricing" class="pricing">
+    <!-- <section id="pricing" class="pricing">
       <div class="container" data-aos="fade-up">
 
         <div class="section-title">
@@ -773,10 +781,10 @@ value="Pre Step" />
         </div>
 
       </div>
-    </section><!-- End Pricing Section -->
+    </section> --> <!-- End Pricing Section -->
 
     <!-- ======= Frequently Asked Questions Section ======= -->
-    <section id="faq" class="faq section-bg">
+    <!-- <section id="faq" class="faq section-bg">
       <div class="container" data-aos="fade-up">
 
         <div class="section-title">
@@ -835,10 +843,10 @@ value="Pre Step" />
         </div>
 
       </div>
-    </section><!-- End Frequently Asked Questions Section -->
+    </section> --> <!-- End Frequently Asked Questions Section -->
 
     <!-- ======= Contact Section ======= -->
-    <section id="contact" class="contact">
+    <!-- <section id="contact" class="contact">
       <div class="container" data-aos="fade-up">
 
         <div class="section-title">
@@ -905,14 +913,14 @@ value="Pre Step" />
         </div>
 
       </div>
-    </section><!-- End Contact Section -->
+    </section> --> <!-- End Contact Section -->
 
   </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->
   <footer id="footer">
 
-    <div class="footer-newsletter">
+    <!-- <div class="footer-newsletter">
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-lg-6">
@@ -977,18 +985,18 @@ value="Pre Step" />
 
         </div>
       </div>
-    </div>
+    </div> -->
 
     <div class="container footer-bottom clearfix">
-      <div class="copyright">
+      <!-- <div class="copyright">
         &copy; Copyright <strong><span>Arsha</span></strong>. All Rights Reserved
-      </div>
+      </div> -->
       <div class="credits">
         <!-- All the links in the footer should remain intact. -->
         <!-- You can delete the links only if you purchased the pro version. -->
         <!-- Licensing information: https://bootstrapmade.com/license/ -->
         <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/arsha-free-bootstrap-html-template-corporate/ -->
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+       <!--Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>--> 
       </div>
     </div>
   </footer><!-- End Footer -->
@@ -1199,14 +1207,14 @@ $( document ).ready(function() {
     var blinkTimerMin = 5000; // 5sec = 5000, 
     var SittingTimerMin = 1; // 1min = 1, 
     var DistanceTimerMin = 150; // 15sec = 150,
-    var PostureTimerMin = 5000 // 5sec = 5000,
+    var PostureTimerMin = 600000 // 5sec = 5000, 10mins = 600000
     let myInterval = setInterval(displayBlinkNotification, blinkTimerMin);
     setInterval(analysePosture('Notification'), PostureTimerMin);
     function displayBlinkNotification(){
       if(TOTAL_BLINKS >= 1) {
         console.log('Alertt Blink');
-        showNotification('Blink your eyes..');
-        showChromeNotification('Blink your eyes..');
+        showNotification('Time to wink both your eyes..');
+        showChromeNotification('Time to wink both your eyes..');
       }
     }
     function onResults(results) {
@@ -1307,14 +1315,23 @@ $( document ).ready(function() {
       canvasCtx.fillStyle = "red";
       canvasCtx.font = "30px Arial";
       canvasCtx.fillText(dZ + " cm", width * 0.75, 50);
-      document.getElementById('distance_text_dipslay').innerHTML = dZ + " cm";
+      let kk = 'Too close';
+      if(dZ > 40) {
+        kk = 'Perfect';
+        document.getElementById('distance_text_dipslay').innerHTML = "<h4>"+ kk +"</h4> <p>"+dZ + " cm </p>";
+        document.getElementById('distance_result').innerHTML = "<h4> Current Posture: "+ kk +"</h4> <p>"+dZ + " cm </p>";
+      } else {
+        document.getElementById('distance_text_dipslay').innerHTML = "<h4 style='color:red'>"+ kk +"</h4> <p style='color:red'>"+dZ + " cm </p>";
+        document.getElementById('distance_result').innerHTML = "<h4 style='color:red'> Current Posture: "+ kk +"</h4> <p style='color:red'>"+dZ + " cm </p>";
+      }
+      
       canvasCtx.restore();
       }
     }
     function distanceNotificationTimer() {
-          console.log("Alertt Kindly sit back from your monitor");
-          showNotification('Kindly sit back from your monitor..')
-          showChromeNotification('Kindly sit back from your monitor..');
+          console.log("Alertt If you are getting this alert, probably you are too close to monitor");
+          showNotification('If you are getting this alert, probably you are too close to monitor..')
+          showChromeNotification('If you are getting this alert, probably you are too close to monitor..');
           distanceAlertCount = 0;
     }
     function getMinutesDifference(totalBlinks, date = new Date()) {
@@ -1354,9 +1371,9 @@ $( document ).ready(function() {
       sittingInterval = setInterval(function() {
         sittingTimerCount += 1;
         if((sittingTimerCount/60) >= SittingTimerMin) { // currently 1 min
-          console.log('Alertt Sitting long time');
-          showNotification('Sitting long time');
-          showChromeNotification('Sitting long time');
+          console.log('Alertt Oh dear, Its been long time, Take a break');
+          showNotification('Oh dear, Its been long time, Take a break');
+          showChromeNotification('Oh dear, Its been long time, Take a break');
           clearInterval(sittingInterval);
           sittingFlagCounter = false;
           sittingTimerCount = 0;
@@ -1505,6 +1522,9 @@ $( document ).ready(function() {
   }
   function analysePosture(param){
     $("#posData").text('');
+    $("#Reanalyze").hide();
+    $("#started").show();
+    if(!param){ param = 'analyze'}
     $.ajax({
             type: 'GET',
             url: "http://192.168.4.65:5000/users/now?email=rajprabhakar@gmail.com",
@@ -1516,17 +1536,34 @@ $( document ).ready(function() {
              if(data.now.pose == 'good'){
               postureResult = data.now.pose;
              } else if(data.now.remedy == 'wait') {
-              analysePosture();
+              analysePosture('wait');
               postureResult = '';
              }
              else {
               postureResult = data.now.remedy;
+              $("#Reanalyze").show();
+             }
+
+             if(postureResult == 'straight') {
+              postureResult = 'Keep your Spine straight';
+
+             } else if(postureResult == 'neck') {
+              postureResult = 'uh ho! Head posture is not correct, Can you head up little bit.';
+
+             } else if(postureResult == 'back') {
+              postureResult = 'Just adjust your back to set perfect sitting posture';
+             } 
+            
+             if(param && param == 'Notification' && data.now.pose != 'good') {
+                showChromeNotification('Posture Alert: '+postureResult);
+                showNotification('Posture Alert: '+postureResult);
+             }
+             if(data.now.remedy && data.now.remedy != 'wait' && (param == 'analyze' || param == 'Reanalyze')) {
+              $("#started").hide();
+             
              }
              $("#posData").text(postureResult);
-             if(param && param == 'Notification') {
-                showChromeNotification(postureResult);
-                showNotification(postureResult);
-             }
+             $
             
             }
         });
@@ -1733,15 +1770,22 @@ $( document ).ready(function() {
     #analysisWindow2{
       display: none;
     }
-    .loadersmall {
-      border: 5px solid #f3f3f3;
-    -webkit-animation: spin 1s linear infinite;
-    animation: spin 1s linear infinite;
-    border-top: 5px solid #555;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-  }
+  
+
+  .loader {
+  display: inline-block;
+  border: 4px solid #f3f3f3; /* Light grey */
+  border-top: 4px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 22pt;
+  height: 22pt;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
     
 </style>
 
