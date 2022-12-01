@@ -895,7 +895,7 @@
         id: 'haduken',
         theme: 'dark',
         icon: 'icon-contacts',
-        title: 'Hey Raj',
+        title: 'Hi Raj',
         displayMode: 2,
         message: 'Welcome Buddy !!',
         position: 'bottomRight',
@@ -913,6 +913,30 @@
         },
         iconColor: 'rgb(0, 255, 184)'
     });
+function showNotification(customMessage){
+    iziToast.show({
+        id: 'haduken',
+        theme: 'dark',
+        icon: 'icon-contacts',
+        title: 'Hey Buddy',
+        displayMode: 2,
+        message: customMessage,
+        position: 'bottomRight',
+        transitionIn: 'flipInX',
+        transitionOut: 'flipOutX',
+        progressBarColor: 'rgb(0, 255, 184)',
+        image: '../ergobot/assets/img/avatar.png',
+        imageWidth: 70,
+        layout: 2,
+        onClosing: function(){
+            console.info('onClosing');
+        },
+        onClosed: function(instance, toast, closedBy){
+            console.info('Closed | closedBy: ' + closedBy);
+        },
+        iconColor: 'rgb(0, 255, 184)'
+    });
+}
 const lineChartCtx = document.getElementById('lineChart');
 const lineChartData = {
   labels: ['Low','Medium','High'],
@@ -968,10 +992,15 @@ new Chart(pieChartCtx, pieChartConfig );
     var sittngFlag = false;
     var sittingFlagCounter = false;
     var sittingTimerCount = 0;
-    var blinkTimerMin = 5000;
+    var blinkTimerMin = 5000; // 5sec = 5000, 
+    var SittingTimerMin = 1; // 1min = 1, 
+    var DistanceTimerMin = 150; // 15sec = 150,
     let myInterval = setInterval(displayBlinkNotification, blinkTimerMin);
     function displayBlinkNotification(){
-      alert('blink');
+      if(TOTAL_BLINKS > 1) {
+        console.log('Alertt Blink');
+        showNotification('Blink your eyes..')
+      }
     }
     function onResults(results) {
       // console.log(results);
@@ -1063,7 +1092,7 @@ new Chart(pieChartCtx, pieChartConfig );
         if(dZ < 30) {
           distanceAlertCount += 1;
         }
-        if(distanceAlertCount >= 10) {
+        if(distanceAlertCount >= DistanceTimerMin) { // millisecond
           distanceNotificationTimer();
         }
       canvasCtx.fillStyle = "red";
@@ -1073,11 +1102,11 @@ new Chart(pieChartCtx, pieChartConfig );
       }
     }
     function distanceNotificationTimer() {
-          console.log("Kidnly sit back from your monitor");
+          console.log("Alertt Kindly sit back from your monitor");
+          showNotification('Kindly sit back from your monitor..')
           distanceAlertCount = 0;
     }
     function getMinutesDifference(totalBlinks, date = new Date()) {
-      console.log(2222, totalBlinks);
         // Update the count down every 1 second
         countDownDate = new Date().getTime();
         blinkingInterval = setInterval(function() {
@@ -1097,7 +1126,7 @@ new Chart(pieChartCtx, pieChartConfig );
           // console.log(seconds);
           // console.log(minutes);
           if(seconds >= 10) {
-            console.log("Blink ur Eyes");
+            // console.log("Blink ur Eyes");
             clearInterval(blinkingInterval);
           }
         // If the count down is over, write some text 
@@ -1113,8 +1142,9 @@ new Chart(pieChartCtx, pieChartConfig );
       console.log(sittingInterval);
       sittingInterval = setInterval(function() {
         sittingTimerCount += 1;
-        if((sittingTimerCount/60) >= 1) { // currently 1 min
-          console.log('Sitting long time');
+        if((sittingTimerCount/60) >= SittingTimerMin) { // currently 1 min
+          console.log('Alertt Sitting long time');
+          showNotification('Sitting long time');
           clearInterval(sittingInterval);
           sittingFlagCounter = false;
           sittingTimerCount = 0;
