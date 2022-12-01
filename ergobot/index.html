@@ -913,6 +913,12 @@
         },
         iconColor: 'rgb(0, 255, 184)'
     });
+    function showChromeNotification(customMessage) {
+      const greeting = new Notification('Hey Buddy !',{
+          body: customMessage,
+          icon: '../ergobot/assets/img/avatar.png'
+      });
+    }
 function showNotification(customMessage){
     iziToast.show({
         id: 'haduken',
@@ -999,7 +1005,8 @@ new Chart(pieChartCtx, pieChartConfig );
     function displayBlinkNotification(){
       if(TOTAL_BLINKS > 1) {
         console.log('Alertt Blink');
-        showNotification('Blink your eyes..')
+        showNotification('Blink your eyes..');
+        showChromeNotification('Blink your eyes..');
       }
     }
     function onResults(results) {
@@ -1104,6 +1111,7 @@ new Chart(pieChartCtx, pieChartConfig );
     function distanceNotificationTimer() {
           console.log("Alertt Kindly sit back from your monitor");
           showNotification('Kindly sit back from your monitor..')
+          showChromeNotification('Kindly sit back from your monitor..');
           distanceAlertCount = 0;
     }
     function getMinutesDifference(totalBlinks, date = new Date()) {
@@ -1145,6 +1153,7 @@ new Chart(pieChartCtx, pieChartConfig );
         if((sittingTimerCount/60) >= SittingTimerMin) { // currently 1 min
           console.log('Alertt Sitting long time');
           showNotification('Sitting long time');
+          showChromeNotification('Sitting long time');
           clearInterval(sittingInterval);
           sittingFlagCounter = false;
           sittingTimerCount = 0;
