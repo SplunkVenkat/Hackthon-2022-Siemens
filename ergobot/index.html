@@ -12,6 +12,7 @@
   <!-- Favicons -->
   <link href="assets/img/favicon.png" rel="icon">
   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css"> 
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
@@ -165,7 +166,6 @@
           </div>
           <div class="col-lg-6 pt-4 pt-lg-0">
             <img src="assets/img/ergo/character-houding_dribbble.gif" class="img-fluid" alt="">
-            
           </div>
         </div>
 
@@ -175,10 +175,15 @@
     <!-- ======= Why Us Section ======= -->
     <section id="why-us" class="why-us section-bg">
       <div class="container-fluid" data-aos="fade-up">
-
         <div class="row">
+          <div class="botAnalysis" style="height:800px;">
+            <div class="container">
+              <video class="input_video"></video>
+              <canvas class="output_canvas" width="1280px" height="720px"></canvas>
+            </div>
+          </div> 
 
-          <div class="col-lg-7 d-flex flex-column justify-content-center align-items-stretch  order-2 order-lg-1">
+          <!-- <div class="col-lg-7 d-flex flex-column justify-content-center align-items-stretch  order-2 order-lg-1">
 
             <div class="content">
               <h3>Eum ipsam laborum deleniti <strong>velit pariatur architecto aut nihil</strong></h3>
@@ -222,7 +227,7 @@
           </div>
 
           <div class="col-lg-5 align-items-stretch order-1 order-lg-2 img" style='background-image: url("assets/img/why-us.png");' data-aos="zoom-in" data-aos-delay="150">&nbsp;</div>
-        </div>
+        </div> -->
 
       </div>
     </section><!-- End Why Us Section -->
@@ -874,6 +879,11 @@
   <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
   <script src="assets/vendor/waypoints/noframework.waypoints.js"></script>
   <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js" type="text/javascript"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
@@ -881,6 +891,28 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 <script>
+  iziToast.show({
+        id: 'haduken',
+        theme: 'dark',
+        icon: 'icon-contacts',
+        title: 'Hey Raj',
+        displayMode: 2,
+        message: 'Welcome Buddy !!',
+        position: 'bottomRight',
+        transitionIn: 'flipInX',
+        transitionOut: 'flipOutX',
+        progressBarColor: 'rgb(0, 255, 184)',
+        image: '../ergobot/assets/img/avatar.png',
+        imageWidth: 70,
+        layout: 2,
+        onClosing: function(){
+            console.info('onClosing');
+        },
+        onClosed: function(instance, toast, closedBy){
+            console.info('Closed | closedBy: ' + closedBy);
+        },
+        iconColor: 'rgb(0, 255, 184)'
+    });
 const lineChartCtx = document.getElementById('lineChart');
 const lineChartData = {
   labels: ['Low','Medium','High'],
@@ -920,12 +952,290 @@ const pieChartConfig = {
 };
 new Chart(pieChartCtx, pieChartConfig );
 </script>
+<script type="module">
+  const videoElement = document.getElementsByClassName('input_video')[0];
+    const canvasElement = document.getElementsByClassName('output_canvas')[0];
+    const canvasCtx = canvasElement.getContext('2d');
+    var distanceAlertCount = 0;
+    var frame_counter =0;	
+    var CEF_COUNTER =0;
+    var TOTAL_BLINKS =0;
+    var CLOSED_EYES_FRAME =1;
+    var countDownDate = new Date().getTime();
+    var BLINKFLAG = 0;
+    var blinkingInterval;
+    var sittingInterval;
+    var sittngFlag = false;
+    var sittingFlagCounter = false;
+    var sittingTimerCount = 0;
+    var blinkTimerMin = 5000;
+    let myInterval = setInterval(displayBlinkNotification, blinkTimerMin);
+    function displayBlinkNotification(){
+      alert('blink');
+    }
+    function onResults(results) {
+      // console.log(results);
+      var irisLeftMinX = -1;
+      var irisLeftMaxX = -1;
+      var width = results.image.width;
+      var height = results.image.height;
+      canvasCtx.save();
+      canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+      canvasCtx.drawImage(
+          results.image, 0, 0, canvasElement.width, canvasElement.height);
+      if(results.multiFaceLandmarks.length >= 1) {
+        sittngFlag = true;
+        sittingIntervalCalculation();
+      } else {
+        sittngFlag = false;
+        sittingTimerCount = 0;
+      }
+      if (results.multiFaceLandmarks) {
+        // console.log(results.multiFaceLandmarks);
+        for (const landmarks of results.multiFaceLandmarks) {
+          
+          for (const point of FACEMESH_LEFT_IRIS) {
+            // console.log(point);
+            var point0 = landmarks[point[0]];
+            //console.log(point0);
+              if (irisLeftMinX == -1 || point0.x * width < irisLeftMinX) {
+                irisLeftMinX = point0.x * width;
+              }
+              if (irisLeftMaxX == -1 || point0.x * width > irisLeftMaxX) {
+                  irisLeftMaxX = point0.x * width;
+              }
+          }
+          /*for (const point of FACEMESH_RIGHT_EYE) {
+            var point0 = landmarks[point[0]];
+            if (irisLeftMinX == -1 || point0.x * width < irisLeftMinX) {
+                irisLeftMinX = point0.x * width;
+              }
+              if (irisLeftMaxX == -1 || point0.x * width > irisLeftMaxX) {
+                  irisLeftMaxX = point0.x * width;
+              }
+          }*/
+          /*drawConnectors(canvasCtx, landmarks, FACEMESH_TESSELATION,
+                         {color: '#C0C0C070', lineWidth: 1});
+          drawConnectors(canvasCtx, landmarks, FACEMESH_RIGHT_EYE, {color: '#FF3030'});
+          drawConnectors(canvasCtx, landmarks, FACEMESH_RIGHT_EYEBROW, {color: '#FF3030'});
+          drawConnectors(canvasCtx, landmarks, FACEMESH_RIGHT_IRIS, {color: '#FF3030'});
+          drawConnectors(canvasCtx, landmarks, FACEMESH_LEFT_EYE, {color: '#30FF30'});
+          drawConnectors(canvasCtx, landmarks, FACEMESH_LEFT_EYEBROW, {color: '#30FF30'});
+          drawConnectors(canvasCtx, landmarks, FACEMESH_LEFT_IRIS, {color: '#30FF30'});
+          drawConnectors(canvasCtx, landmarks, FACEMESH_FACE_OVAL, {color: '#E0E0E0'});
+          drawConnectors(canvasCtx, landmarks, FACEMESH_LIPS, {color: '#E0E0E0'});*/
+          drawConnectors(canvasCtx, landmarks, FACEMESH_RIGHT_EYE, {color: '#FF3030'});
+          drawConnectors(canvasCtx, landmarks, FACEMESH_LEFT_IRIS, {color: '#30FF30'});
+          var ratio = blinkRatio(canvasCtx, landmarks, FACEMESH_RIGHT_EYE, FACEMESH_LEFT_EYE);	
+          //console.log(ratio);	
+          if (ratio >0.4) {	
+                CEF_COUNTER +=1	
+          }	
+            else {	
+                if (CEF_COUNTER>CLOSED_EYES_FRAME) {	
+                    TOTAL_BLINKS +=1
+                    BLINKFLAG = true;
+                    clearInterval(myInterval);
+                    myInterval = setInterval(displayBlinkNotification, blinkTimerMin);
+                    getMinutesDifference(TOTAL_BLINKS);
+                    CEF_COUNTER =0	
+                }	
+            }	
+            // console.log(TOTAL_BLINKS);	
+      
+      canvasCtx.fillStyle = "green";	
+      canvasCtx.font = "30px Arial";	
+      canvasCtx.fillText("Blinking Count : "+TOTAL_BLINKS , width * 0.15, 50);	
+      // canvasCtx.restore();
+        }
+      }
+      var dx = irisLeftMaxX - irisLeftMinX;
+      var dX = 11.7;
+
+      // Logitech HD Pro C922	Norm focal
+      var normalizedFocaleX = 1.40625;
+      var fx = Math.min(width, height) * normalizedFocaleX;
+      var dZ = (fx * (dX / dx)) / 10.0;
+      dZ = dZ.toFixed(2);
+
+      //console.log(dZ);
+      if(dZ != 'Infinity') {
+        if(dZ < 30) {
+          distanceAlertCount += 1;
+        }
+        if(distanceAlertCount >= 10) {
+          distanceNotificationTimer();
+        }
+      canvasCtx.fillStyle = "red";
+      canvasCtx.font = "30px Arial";
+      canvasCtx.fillText(dZ + " cm", width * 0.75, 50);
+      canvasCtx.restore();
+      }
+    }
+    function distanceNotificationTimer() {
+          console.log("Kidnly sit back from your monitor");
+          distanceAlertCount = 0;
+    }
+    function getMinutesDifference(totalBlinks, date = new Date()) {
+      console.log(2222, totalBlinks);
+        // Update the count down every 1 second
+        countDownDate = new Date().getTime();
+        blinkingInterval = setInterval(function() {
+        
+        // Get today's date and time
+        var now = new Date().getTime();
+          // console.log(countDownDate);
+          // console.log(now);
+        // Find the distance between now and the count down date
+        var distance = now - countDownDate ;
+        // console.log(distance);
+        // Time calculations for days, hours, minutes and seconds
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+          // console.log(seconds);
+          // console.log(minutes);
+          if(seconds >= 10) {
+            console.log("Blink ur Eyes");
+            clearInterval(blinkingInterval);
+          }
+        // If the count down is over, write some text 
+        if (distance < 0) {
+          clearInterval(blinkingInterval);
+          
+        }
+        }, 1000);
+    }
+    function sittingIntervalCalculation() {
+      if(!sittingFlagCounter) {
+        sittingFlagCounter = true;
+      console.log(sittingInterval);
+      sittingInterval = setInterval(function() {
+        sittingTimerCount += 1;
+        if((sittingTimerCount/60) >= 1) { // currently 1 min
+          console.log('Sitting long time');
+          clearInterval(sittingInterval);
+          sittingFlagCounter = false;
+          sittingTimerCount = 0;
+        }
+        // console.log("sittingTimerCount"+sittingTimerCount);
+        }, 1000);
+      }
+    }
+    const faceMesh = new FaceMesh({locateFile: (file) => {
+      return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
+    }});
+    faceMesh.setOptions({
+      maxNumFaces: 1,
+      refineLandmarks: true,
+      minDetectionConfidence: 0.5,
+      minTrackingConfidence: 0.5,
+      selfieMode: true,
+      enableFaceGeometry: false,
+    });
+    faceMesh.onResults(onResults);
+    
+    const camera = new Camera(videoElement, {
+      onFrame: async () => {
+        await faceMesh.send({image: videoElement});
+      },
+      width: 1280,
+      height: 720
+    });
+    camera.start();
+    var mediaDevices = navigator.mediaDevices;
+    // console.log(mediaDevices);
+    function landmarksDetection(img, results) {	
+    var img_width = results.image.width;	
+    var img_height = results.image.height;	
+    var coord = [];	
+    for (const landmarks of results.multiFaceLandmarks) {	
+          // console.log(landmarks);	
+          var coordX = parseInt(landmarks[0].x * img_width);	
+          var coordY = parseInt(landmarks[0].y * img_height);	
+          //var finalCoords = '('+coordX+','+coordY+')'	
+          coord.push(finalCoords)	
+    }	
+      // console.log(coord);	
+      return coord;	
+    }	
+    function euclaideanDistance(point, point1) {	
+      var x = point.x;	
+      var y = point.y;	
+      var x1 = point1.x;	
+      var y1 = point1.y;	
+      var distance = Math.sqrt((x1 - x)**2 + (y1 - y)**2)	
+    return distance	
+    }	
+    function blinkRatio(img, landmarks, right_indices, left_indices){	
+      // Right eyes 	
+      // horizontal line 	
+      var rh_right = landmarks[right_indices[0][1]];	
+      var rh_left = landmarks[right_indices[8][1]];	
+      var rv_top = landmarks[right_indices[12][1]];	
+      var rv_bottom = landmarks[right_indices[4][1]];	
+      // LEFT_EYE 	
+      // horizontal line 	
+      var lh_right = landmarks[left_indices[0][1]]	
+      var lh_left = landmarks[left_indices[8][1]]	
+      // vertical line 	
+      var lv_top = landmarks[left_indices[12][1]]	
+      var lv_bottom = landmarks[left_indices[4][1]]	
+      var rhDistance = euclaideanDistance(rh_right, rh_left);	
+      var rvDistance = euclaideanDistance(rv_top, rv_bottom)	
+      var lvDistance = euclaideanDistance(lv_top, lv_bottom)	
+      var lhDistance = euclaideanDistance(lh_right, lh_left)	
+      var reRatio = rhDistance/rvDistance	
+      var leRatio = lhDistance/lvDistance	
+      var ratio = (reRatio+leRatio)/2	
+      return ratio 	
+    }
+  </script>
 <style>
     .initial-container .card, .second-container .card {
         margin: 10px 10px;
     }
     .progress {
         margin: 10px;
+    }
+    .botAnalysis .container {
+      position: absolute;
+      background-color: #596e73;
+      width: 100%;
+      max-height: 100%;
+    }
+
+    .botAnalysis .input_video {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      &.selfie {
+        transform: scale(-1, 1);
+      }
+    }
+
+    .botAnalysis .input_image {
+      position: absolute;
+    }
+
+    .botAnalysis .canvas-container {
+      display:flex;
+      height: 100%;
+      width: 100%;
+      justify-content: center;
+      align-items:center;
+    }
+
+    .botAnalysis .output_canvas {
+      max-width: 100%;
+      display: block;
+      position: relative;
+      left: 0;
+      top: 0;
     }
 </style>
 
