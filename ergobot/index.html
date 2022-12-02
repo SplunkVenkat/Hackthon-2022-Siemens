@@ -698,7 +698,7 @@ value="Pre Step" />
                 <h5 class="card-title  mb-1">Eye Health</h5>
               </div>
               <div class="card-body">
-                <h1 class="display-4 font-weight-bold text-success text-center" id="blinking_text_dipslay">0</h1>
+                <h1 class="display-4 font-weight-bold text-danger text-center" id="blinking_text_dipslay">0</h1>
               </div>
             </div>
             <div class="card border-succes rounded-0" style="height: 200px;top: 10%;flex: 0 0 auto;padding: -5px;">
@@ -1196,6 +1196,8 @@ $( document ).ready(function() {
     var frame_counter =0;	
     var CEF_COUNTER =0;
     var TOTAL_BLINKS =0;
+    var blinksPerMinute = 0;
+    var blinksTimerCount = 0;
     var CLOSED_EYES_FRAME =1;
     var countDownDate = new Date().getTime();
     var BLINKFLAG = 0;
@@ -1219,6 +1221,11 @@ $( document ).ready(function() {
     }
     function onResults(results) {
       // console.log(results);
+      blinksTimerCount++;
+      console.log(blinksTimerCount);
+      if(blinksTimerCount % 600 == 0) {
+        blinksPerMinute = 0;
+      }
       var irisLeftMinX = -1;
       var irisLeftMaxX = -1;
       var width = results.image.width;
@@ -1279,10 +1286,12 @@ $( document ).ready(function() {
             else {	
                 if (CEF_COUNTER>CLOSED_EYES_FRAME) {	
                     TOTAL_BLINKS +=1
+                    blinksPerMinute +=1
                     BLINKFLAG = true;
                     clearInterval(myInterval);
                     myInterval = setInterval(displayBlinkNotification, blinkTimerMin);
                     getMinutesDifference(TOTAL_BLINKS);
+                    updateBlinkStatus(blinksPerMinute);
                     CEF_COUNTER =0	
                 }	
             }	
@@ -1291,7 +1300,7 @@ $( document ).ready(function() {
       canvasCtx.fillStyle = "green";	
       canvasCtx.font = "30px Arial";	
       canvasCtx.fillText("Blinking Count : "+TOTAL_BLINKS , width * 0.15, 50);
-      document.getElementById('blinking_text_dipslay').innerHTML = TOTAL_BLINKS;	
+      document.getElementById('blinking_text_dipslay').innerHTML = blinksPerMinute;	
       // canvasCtx.restore();
         }
       }
@@ -1427,6 +1436,19 @@ $( document ).ready(function() {
       var distance = Math.sqrt((x1 - x)**2 + (y1 - y)**2)	
     return distance	
     }	
+    function updateBlinkStatus(count) {
+      var element = document.getElementById('blinking_text_dipslay');
+      element.classList.remove("text-success");
+      element.classList.remove("text-danger");
+      element.classList.remove("text-warning");
+      if(count >= 1 && count <= 10) {
+        element.classList.add("text-danger");
+      } else if(count >= 1 && count <= 15) {
+        element.classList.add("text-warning");
+      } else {
+        element.classList.add("text-success");
+      }
+    }
     function blinkRatio(img, landmarks, right_indices, left_indices){	
       // Right eyes 	
       // horizontal line 	
