@@ -1176,7 +1176,6 @@ const pieChartConfig = {
 new Chart(pieChartCtx, pieChartConfig );
 
 $( document ).ready(function() {
-
   $.ajax({
             type: 'GET',
             url: "http://192.168.187.65:5000/users/pose/day?email=rajprabhakar@gmail.com&date=2022-12-01",
@@ -1209,9 +1208,9 @@ $( document ).ready(function() {
     var blinkTimerMin = 10000; // 5sec = 5000/10000,    35 =35000
     var SittingTimerMin = 2; // 2min = 2,     2hrs =120
     var DistanceTimerMin = 100; // 10sec = 100,   15mins = 900
-    var PostureTimerMin = 10000 // 10sec = 10000, 10mins = 600000
+    var PostureTimerMin = 30000 // 10sec = 10000, 10mins = 600000
     let myInterval = setInterval(displayBlinkNotification, blinkTimerMin);
-    setInterval(analysePosture('Notification'), PostureTimerMin);
+    setInterval(analysePosture2, PostureTimerMin);
     function displayBlinkNotification(){
       if(TOTAL_BLINKS >= 1) {
         console.log('Alertt Blink');
@@ -1541,6 +1540,37 @@ $( document ).ready(function() {
           return false;  
       }) 
   }
+  function analysePosture2(param){
+    console.log('neww', param);
+    $.ajax({
+            type: 'GET',
+            url: "http://192.168.187.65:5000/users/now?email=rajprabhakar@gmail.com",
+            contentType: "application/json",
+            crossDomain: true,
+            success:function(data){
+             console.log(data.now);
+             postureResult = data.now.remedy;
+             if(postureResult == 'straight') {
+              postureResult = 'Keep your Spine straight';
+              $("#started").hide();
+
+             } else if(postureResult == 'neck') {
+              postureResult = 'uh ho! Head posture is not correct, Can you head up little bit.';
+              $("#started").hide();
+
+             } else if(postureResult == 'back') {
+              postureResult = 'Just adjust your back to set perfect sitting posture';
+              $("#started").hide();
+             } 
+             if(data.now.remedy != 'wait' && data.now.pose != 'good') {
+                showChromeNotification('Posture Alert: '+postureResult);
+                showNotification('Posture Alert: '+postureResult);
+             }
+            
+            }
+        });
+  }
+  
   function analysePosture(param){
     // console.log(4444, param);
     $("#posData").text('');
