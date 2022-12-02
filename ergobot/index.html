@@ -1179,7 +1179,7 @@ $( document ).ready(function() {
 
   $.ajax({
             type: 'GET',
-            url: "http://192.168.83.65:5000/users/pose/day?email=rajprabhakar@gmail.com&date=2022-12-01",
+            url: "http://192.168.187.65:5000/users/pose/day?email=rajprabhakar@gmail.com&date=2022-12-01",
             contentType: "application/json",
             crossDomain: true,
             success:function(data){
@@ -1205,11 +1205,11 @@ $( document ).ready(function() {
     var sittingInterval;
     var sittngFlag = false;
     var sittingFlagCounter = false;
-    var sittingTimerCount = 0;
-    var blinkTimerMin = 5000; // 5sec = 5000, 
-    var SittingTimerMin = 1; // 1min = 1, 
-    var DistanceTimerMin = 150; // 15sec = 150,
-    var PostureTimerMin = 600000 // 5sec = 5000, 10mins = 600000
+    var sittingTimerCount = 0; // Global
+    var blinkTimerMin = 10000; // 5sec = 5000/10000,    35 =35000
+    var SittingTimerMin = 2; // 2min = 2,     2hrs =120
+    var DistanceTimerMin = 100; // 10sec = 100,   15mins = 900
+    var PostureTimerMin = 10000 // 10sec = 10000, 10mins = 600000
     let myInterval = setInterval(displayBlinkNotification, blinkTimerMin);
     setInterval(analysePosture('Notification'), PostureTimerMin);
     function displayBlinkNotification(){
@@ -1222,7 +1222,7 @@ $( document ).ready(function() {
     function onResults(results) {
       // console.log(results);
       blinksTimerCount++;
-      console.log(blinksTimerCount);
+      // console.log(blinksTimerCount);
       if(blinksTimerCount % 600 == 0) {
         blinksPerMinute = 0;
       }
@@ -1376,7 +1376,6 @@ $( document ).ready(function() {
     function sittingIntervalCalculation() {
       if(!sittingFlagCounter) {
         sittingFlagCounter = true;
-      console.log(sittingInterval);
       sittingInterval = setInterval(function() {
         sittingTimerCount += 1;
         if((sittingTimerCount/60) >= SittingTimerMin) { // currently 1 min
@@ -1435,7 +1434,7 @@ $( document ).ready(function() {
       var y1 = point1.y;	
       var distance = Math.sqrt((x1 - x)**2 + (y1 - y)**2)	
     return distance	
-    }	
+    }
     function updateBlinkStatus(count) {
       var element = document.getElementById('blinking_text_dipslay');
       element.classList.remove("text-success");
@@ -1448,7 +1447,7 @@ $( document ).ready(function() {
       } else {
         element.classList.add("text-success");
       }
-    }
+    }	
     function blinkRatio(img, landmarks, right_indices, left_indices){	
       // Right eyes 	
       // horizontal line 	
@@ -1543,13 +1542,15 @@ $( document ).ready(function() {
       }) 
   }
   function analysePosture(param){
+    // console.log(4444, param);
     $("#posData").text('');
     $("#Reanalyze").hide();
     $("#started").show();
     if(!param){ param = 'analyze'}
+    
     $.ajax({
             type: 'GET',
-            url: "http://192.168.4.65:5000/users/now?email=rajprabhakar@gmail.com",
+            url: "http://192.168.187.65:5000/users/now?email=rajprabhakar@gmail.com",
             contentType: "application/json",
             crossDomain: true,
             success:function(data){
@@ -1557,32 +1558,38 @@ $( document ).ready(function() {
              
              if(data.now.pose == 'good'){
               postureResult = data.now.pose;
+              postureResult = "Looks Perfect!"
+              $("#started").hide();
              } else if(data.now.remedy == 'wait') {
-              analysePosture('wait');
+              if(param == 'analyze' || param == 'Reanalyze' || param == 'wait'){
+                analysePosture('wait');
+              }
               postureResult = '';
              }
              else {
               postureResult = data.now.remedy;
               $("#Reanalyze").show();
+              $("#started").hide();
              }
-
              if(postureResult == 'straight') {
               postureResult = 'Keep your Spine straight';
+              $("#started").hide();
 
              } else if(postureResult == 'neck') {
               postureResult = 'uh ho! Head posture is not correct, Can you head up little bit.';
+              $("#started").hide();
 
              } else if(postureResult == 'back') {
               postureResult = 'Just adjust your back to set perfect sitting posture';
+              $("#started").hide();
              } 
-            
-             if(param && param == 'Notification' && data.now.pose != 'good') {
+           
+             if(data.now.remedy != 'wait' && param && param == 'Notification' && data.now.pose != 'good') {
                 showChromeNotification('Posture Alert: '+postureResult);
                 showNotification('Posture Alert: '+postureResult);
              }
              if(data.now.remedy && data.now.remedy != 'wait' && (param == 'analyze' || param == 'Reanalyze')) {
               $("#started").hide();
-             
              }
              $("#posData").text(postureResult);
              $
